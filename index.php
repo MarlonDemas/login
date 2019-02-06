@@ -1,3 +1,19 @@
+<?php
+    require_once "connect.php";
+
+    $users = $db_server->query("CREATE TABLE IF NOT EXISTS users(
+                               UserID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                               Username VARCHAR(128) NOT NULL,
+                               Password VARCHAR(128) NOT NULL,
+                               Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+    
+    if ($users) {
+    } else {
+        echo "Error: " . $users;
+    }    
+?>
+
+
 <!DOCTYPE html>
 <html>
     <head>
