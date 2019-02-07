@@ -11,6 +11,22 @@
     } else {
         echo "Error: " . $users;
     }    
+
+    $userErr = "";
+    if (isset($_POST['submit'])) {
+        $user = $_POST['user'];
+        $pass = $_POST['pass'];
+
+        $todo_res = $db_server->query("SELECT * FROM users");
+        while($row = $todo_res->fetch_assoc()) {
+            if(trim($user)==$row['Username'] && password_verify(trim($pass), $row['Password'])) {
+                $userErr = "Successfull";
+                header('Location: hotel.php');
+            } else {
+                $userErr = "Username and password incorrect";
+            }
+        }
+    }
 ?>
 
 
@@ -38,19 +54,20 @@
                         <div class="box">
                         <h3 class="title has-text-black">Login</h3>
                         <p class="subtitle has-text-black">Please login to proceed.</p>
-                            <form>
+                        <span><?php echo $userErr ?></span>
+                            <form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
                                 <div class="field">
                                     <div class="control">
-                                        <input class="input is-large" type="email" placeholder="Your Username" autofocus="">
+                                        <input class="input is-large" name="user" type="user" placeholder="Your Username" autofocus="">
                                     </div>
                                 </div>
 
                                 <div class="field">
                                     <div class="control">
-                                        <input class="input is-large" type="password" placeholder="Your Password">
+                                        <input class="input is-large" name="pass" type="password" placeholder="Your Password">
                                     </div>
                                 </div>
-                                <button class="button is-block is-info is-large is-fullwidth">Login</button>
+                                <button name="submit" class="button is-block is-info is-large is-fullwidth">Login</button>
                                 <hr>
                                 Don't have an account? 
                                 <a href="signup.php">Sign Up</a>
