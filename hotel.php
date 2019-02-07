@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    $user = $_SESSION['user']
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,10 +17,35 @@
                 background-size: cover;
                 background-repeat: no-repeat;
             }
+
+            body .hero .navbar {
+                background: rgba(255,255,255,0.6);
+                padding-bottom: 10px;
+            }
         </style>
     </head>
     <body>
         <section class="hero is-fullheight has-background">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="https://bulma.io">
+                        <h3 class="title is-4 has-text-weight-bold has-text-black is-uppercase">me&you</h3>
+                    </a>
+                </div>
+                
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                        <span class = "has-text-black">
+                            <?php echo 'signed in as'." <strong>$user</strong>".' | <span>
+                            <a href="../">
+                                Log out
+                            </a>
+                        </span>' ?>
+                        </span>
+                        </div>
+                </div>
+            </nav>
         </section>
     </body>
 </html>

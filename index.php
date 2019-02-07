@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once "connect.php";
 
     $users = $db_server->query("CREATE TABLE IF NOT EXISTS users(
@@ -21,9 +22,10 @@
         while($row = $todo_res->fetch_assoc()) {
             if(trim($user)==$row['Username'] && password_verify(trim($pass), $row['Password'])) {
                 $userErr = "Successfull";
+                $_SESSION['user'] = $row['Username'];
                 header('Location: hotel.php');
             } else {
-                $userErr = "Username and password incorrect";
+                $userErr = "Username or password incorrect";
             }
         }
     }
@@ -44,17 +46,29 @@
                 background-size: cover;
                 background-repeat: no-repeat;
             }
+            
+            body .hero .navbar {
+                background: rgba(255,255,255,0.4);
+                padding-bottom: 10px;
+            }
         </style>
     </head>
     <body>
         <section class="hero is-fullheight has-background">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="https://bulma.io">
+                        <h3 class="title is-4 has-text-weight-bold has-text-black is-uppercase">me&you</h3>
+                    </a>
+                </div>
+            </nav>
             <div class="hero-body">
                 <div class="container has-text-centered">
                     <div class="column is-4 is-offset-4">                        
                         <div class="box">
                         <h3 class="title has-text-black">Login</h3>
                         <p class="subtitle has-text-black">Please login to proceed.</p>
-                        <span><?php echo $userErr ?></span>
+                        <p><?php echo $userErr ?></p>
                             <form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
                                 <div class="field">
                                     <div class="control">
