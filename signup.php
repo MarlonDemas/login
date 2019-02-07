@@ -1,25 +1,36 @@
 <?php
     require_once "connect.php";
 
-    $passErr = "";
+    $userErr = $passErr = "";
 
     if (isset($_POST['submit'])) {
         $user = $_POST['user'];
         $pass = $_POST['pass'];
         $cpass = $_POST['cpass'];
 
-        if(trim($pass)=='' || trim($cpass)=='') {
-            $passErr = 'All fields are required!';
-        } else if($pass != $cpass) {
-            $passErr = 'Passwords do not match!';
-        } else {
-            $pass = password_hash($pass, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO users(Username, Password) VALUES ('$user','$pass')";
+        $arr = array();
 
-            if ($db_server->query($sql)) {
-                header('Location: index.php');
+        $todo_res = $db_server->query("SELECT Username FROM users");
+        while($row = $todo_res->fetch_assoc()) {
+            array_push($arr, $row['Username']);
+        }
+
+        if (in_array(trim($user),$arr)) {
+            $userErr = "*Username already exists";
+        } else {
+            if(trim($pass)=='' || trim($cpass)=='') {
+                $passErr = 'All fields are required!';
+            } else if($pass != $cpass) {
+                $passErr = 'Passwords do not match!';
             } else {
-                echo "Error: " . $sql;
+                $pass = password_hash($pass, PASSWORD_DEFAULT);
+                $sql = "INSERT INTO users(Username, Password) VALUES ('$user','$pass')";
+    
+                if ($db_server->query($sql)) {
+                    header('Location: index.php');
+                } else {
+                    echo "Error: " . $sql;
+                }
             }
         }
     }
@@ -55,6 +66,7 @@
                                         <input class="input is-large" name="user" type="user" placeholder="Your Username" autofocus="">
                                     </div>
                                 </div>
+                                <span style="color:red"><?php echo $userErr ?></span>
 
                                 <div class="field">
                                     <div class="control">
@@ -67,7 +79,7 @@
                                         <input class="input is-large" name="cpass" type="password" placeholder="Re-type Password">
                                     </div>
                                 </div>
-                                <span><?php echo $passErr ?></span>
+                                <span style="color:red"><?php echo $passErr ?></span>
                                 <button class="button is-block is-info is-large is-fullwidth" name="submit">Sign Up</button>
                                 <hr>
                                 Already a member? 
